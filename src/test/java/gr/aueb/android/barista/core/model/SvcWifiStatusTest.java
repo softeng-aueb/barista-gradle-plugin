@@ -1,5 +1,6 @@
 package gr.aueb.android.barista.core.model;
 
+import gr.aueb.android.barista.emulator.EmulatorManager;
 import org.junit.Test;
 
 import java.io.BufferedReader;
@@ -110,7 +111,5 @@ public class SvcWifiStatusTest {
 
         System.out.println(wifiStatus.getStatus());
     }
-
-
 
 }
