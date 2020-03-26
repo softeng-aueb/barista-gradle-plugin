@@ -79,9 +79,6 @@ public class ADBCommandClient implements CommandClient {
             // read the output (if any) and pass it tho the result parser of the Command. It is used
             // when the command output is needed.
             BufferedReader output = new BufferedReader(new InputStreamReader(p.getInputStream()));
-            /*String line;
-            while ((line = output.readLine()) != null)
-                System.out.println("tasklist: " + line);*/
             Stream<String> resultStream = output.lines();
 
             cmd.parseResult(resultStream);
