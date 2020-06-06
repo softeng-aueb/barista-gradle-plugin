@@ -7,7 +7,7 @@ plugins {
 apply plugin: 'net.ltgt.apt-idea'
 
 group 'gr.aueb.android'
-version '1.0.2-alpha'
+version '1.0.3-alpha'
 
 sourceCompatibility = JavaVersion.VERSION_1_8
 

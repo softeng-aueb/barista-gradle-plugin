@@ -63,6 +63,9 @@ public class FuzzScheduler {
         this.crashReporter = new LogcatCrash(token, apk);
 //        Instant start = Instant.now();
 
+        GoHome stop = new GoHome(token, apk);
+        Pull pull = new Pull(token, "/sdcard/coverage.exec");
+
         if (this.input == null) {
             for (int i = 0; i < this.epochs; i++) {
                 for (EventGenerator eg: this.eventGenerators) {
@@ -88,10 +91,13 @@ public class FuzzScheduler {
         }
 
         if (parallel) {
-            this.runner = new ParallelRunner(this.monkeyCommands, (ContextEventGenerator) this.eventGenerators.get(this.eventGenerators.indexOf(this.context)), this.crashReporter);
+            this.runner = new ParallelRunner(this.monkeyCommands,
+                                            (ContextEventGenerator) this.eventGenerators.get(this.eventGenerators.indexOf(this.context)),
+                                            this.crashReporter,
+                                            stop, pull);
         }
         else {
-            this.runner = new SequentialRunner(this.commandsToExecute, this.crashReporter);
+            this.runner = new SequentialRunner(this.commandsToExecute, this.crashReporter, stop, pull);
         }
     }
 
