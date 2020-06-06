@@ -79,8 +79,19 @@ plugin using the following code in your app specific .gradle file
         ...
         id 'gr.aueb.android.barista-plugin'
     }
+    
+d) Update debug android build type to have test coverage enabled
 
-d) When you run **any android test** (basically when the *assembleDebugAndroidTest* gradle task is trigered) 
+    buildTypes {
+        ...
+        
+        debug {
+            ...
+            testCoverageEnabled true
+        }
+    }
+
+e) When you run **any android test** (basically when the *assembleDebugAndroidTest* gradle task is trigered) 
 the plugin should deploy a HTTP server container right before the execution of tests in the emulator. This HTTP server 
 is alive until all the tests are finished. The default listening port of the server is **8040**.  In order to set a specific listening port you can use
 the below configuration structure inside your gradle.build file
@@ -94,6 +105,41 @@ the below configuration structure inside your gradle.build file
 
 > Normally the http server closes automaticaly after each test build. However there may be cases where this is not happening 
 correctly for various reasons. In such cases you have to shutdown the server manually by using http://localhost:8040/barista/kill request from your browser.
+
+f) In order to get coverage reports working.
+   
+   Extend your main activity with BaristaActivity:
+    
+    ...
+    
+    public class YourMainActivity extends BaristaActivity {
+        ...
+    }
+   
+   Copy paste the following task for the coverage reports
+
+    task jacocoTestReport(type: JacocoReport) {
+        reports {
+            xml.enabled = true
+            html.enabled = true
+        }
+    
+        def fileFilter = ['**/R.class',
+                          '**/R$*.class',
+                          '**/BuildConfig.*',
+                          '**/Manifest*.*',
+                          '**/*Test*.*',
+                          'android/**/*.*',
+                          '**/data/models/*']
+        def debugTree = fileTree(dir: "${buildDir}/intermediates/javac/debug", excludes: fileFilter)
+        def mainSrc = "${project.projectDir}/src/main/java"
+    
+        sourceDirectories = files([mainSrc])
+        classDirectories = files([debugTree])
+        executionData = fileTree(dir: "$project.rootDir", includes: [
+                "coverage.exec"
+        ])
+    }
 
 After successfully deploying the barista plugin this message should appear in the build output of your android project 
 
@@ -153,7 +199,7 @@ that can be used at the instrumentation test in order to execute adb and telnet 
 		...
 	
 		//BARISTA DEPENDENCIES START
-		androidTestImplementation 'gr.aueb.android:barista:2.0'
+		implementation 'gr.aueb.android:barista:2.0'
 		implementation 'com.squareup.retrofit2:retrofit:2.4.0'
 		implementation 'com.jakewharton.timber:timber:4.7.1'
 		implementation 'com.squareup.retrofit2:converter-jackson:2.4.0'
