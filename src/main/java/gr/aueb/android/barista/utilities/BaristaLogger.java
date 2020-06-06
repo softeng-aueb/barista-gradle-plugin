@@ -9,6 +9,7 @@
  */
 package gr.aueb.android.barista.utilities;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -39,11 +40,7 @@ public class BaristaLogger {
             String time = new SimpleDateFormat("yyyy-MM-dd HH-mm").format(new Date());
             String name = time + "-barista-fuzzer-crash.log";
 
-            try {
-                Files.createDirectories(Paths.get(path));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            new File(path).mkdirs();
 
             try {
                 FileWriter writer = new FileWriter(path + name);

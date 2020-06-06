@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import gr.aueb.android.barista.core.model.Command;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,14 +18,10 @@ public class CommandExporter {
     private static final String path = "commands/";
 
     public static void export(List<Command> list) {
-        String time = new SimpleDateFormat("yyyy-MM-dd HH-mm").format(new Date());
+        String time = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss").format(new Date());
         String name = time + "-barista-commands.json";
 
-        try {
-            Files.createDirectories(Paths.get(path));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new File(path).mkdirs();
 
         try {
             FileWriter writer = new FileWriter(path + name);
