@@ -15,16 +15,18 @@ public class ParallelRunner implements Runner {
     private ContextEventGenerator eventGenerator;
     private CommandExecutor executor;
     private LogcatCrash crashReporter;
-    private GoHome goHome;
     private Pull pull;
+    private AppSwitch appSwitch;
+    private SwipeUp swipeUp;
     private boolean stop;
 
-    public ParallelRunner(List<Command> monkeyCommands, ContextEventGenerator eventGenerator, LogcatCrash crashReporter, GoHome goHome, Pull pull) {
+    public ParallelRunner(List<Command> monkeyCommands, ContextEventGenerator eventGenerator, LogcatCrash crashReporter, AppSwitch appSwitch, SwipeUp swipeUp, Pull pull) {
         this.monkeyCommands = monkeyCommands;
         this.eventGenerator = eventGenerator;
         this.executor = (CommandExecutorImpl) CommandExecutorFactory.getCommandExecutor();
         this.crashReporter = crashReporter;
-        this.goHome = goHome;
+        this.appSwitch = appSwitch;
+        this.swipeUp = swipeUp;
         this.pull = pull;
     }
 
@@ -66,9 +68,10 @@ public class ParallelRunner implements Runner {
         this.executor.executeCommand(this.crashReporter);
         BaristaLogger.printList(this.crashReporter.getCrashLog());
         BaristaLogger.writeCrashLog(this.crashReporter.getCrashLog());
-        this.executor.executeCommand(this.goHome);
+        this.executor.executeAdbCommand(this.appSwitch);
+        this.executor.executeAdbCommand(this.swipeUp);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

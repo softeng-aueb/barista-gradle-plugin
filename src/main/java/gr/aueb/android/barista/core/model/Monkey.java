@@ -45,10 +45,14 @@ public class Monkey extends AbstractAdbCommand {
 
         StringBuffer buffer = new StringBuffer();
         buffer.append(BaristaCommandPrefixes.MONKEY).append(" ").append("-p ").append(this.apk);
+        buffer.append(" -c android.intent.category.LAUNCHER -c android.intent.category.MONKEY");
         buffer.append(" ").append("-s ").append(this.seed);
         buffer.append(" ").append("-v");
         buffer.append(" ").append("--throttle ").append(this.throttle).append(" ").append(this.count);
         buffer.append(" --pct-appswitch 0");
+        buffer.append(" --pct-syskeys 0");
+        buffer.append(" --pct-appswitch 0");
+        buffer.append(" --pct-majornav 0");
         String command = buffer.toString();
         return command;
     }

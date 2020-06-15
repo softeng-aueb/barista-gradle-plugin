@@ -13,6 +13,7 @@ import gr.aueb.android.barista.fuzzer.runner.Runner;
 import gr.aueb.android.barista.fuzzer.runner.SequentialRunner;
 import gr.aueb.android.barista.utilities.CommandExporter;
 import gr.aueb.android.barista.utilities.PropertiesReader;
+import groovy.sql.Sql;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +64,8 @@ public class FuzzScheduler {
         this.crashReporter = new LogcatCrash(token, apk);
 //        Instant start = Instant.now();
 
-        GoHome stop = new GoHome(token, apk);
+        AppSwitch appSwitch = new AppSwitch(token);
+        SwipeUp swipeUp = new SwipeUp(token);
         Pull pull = new Pull(token, "/sdcard/coverage.exec");
 
         if (this.input == null) {
@@ -94,10 +96,10 @@ public class FuzzScheduler {
             this.runner = new ParallelRunner(this.monkeyCommands,
                                             (ContextEventGenerator) this.eventGenerators.get(this.eventGenerators.indexOf(this.context)),
                                             this.crashReporter,
-                                            stop, pull);
+                                            appSwitch, swipeUp, pull);
         }
         else {
-            this.runner = new SequentialRunner(this.commandsToExecute, this.crashReporter, stop, pull);
+            this.runner = new SequentialRunner(this.commandsToExecute, this.crashReporter, appSwitch, swipeUp, pull);
         }
     }
 
